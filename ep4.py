@@ -1,20 +1,22 @@
 def leEntrada(nome):
     f = open(nome, "r")
-    tipo_grade = 0;
-    cont = 0;
-    Posicoes[]
+    grade = 0;
+    primeira_linha = True;
+    pares = []
 
     for linha in f:
-        if cont == 0:
-            if linha == "H":
-                tipo_grade = 1
-            cont = cont + 1
+        linha = linha.replace("\n","")
+        if primeira_linha == True:
+            if linha == 'H':
+                grade = 1
+            primeira_linha = False
         else:
-            
-        print(linha)
+            numeros = linha.split(',', 1)
+            pares = pares + [(int(numeros[0]),int(numeros[1]))]
+    return grade, pares
     f.close()
 
 def main():
-    leEntrada("arquivo.txt");
-
+    grade, pares = leEntrada("arquivo.txt")
+    
 main()
