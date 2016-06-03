@@ -23,12 +23,10 @@ def simulaQuad(n,m,lista, t):
             for k in range(m):
                 
                 vizinhos = 0
-                #print(j,k, " vizinhos:")
                 for l in range(j-1, j+2):
                     for o in range(k-1, k+2):
 
                         if (l!=j or o!=k) and (l%n,o%m) in lista:
-                            #print(l%n,o%m)
                             vizinhos = vizinhos+1
 
                 if (j,k) in lista and 2<=vizinhos<=3:
@@ -39,12 +37,38 @@ def simulaQuad(n,m,lista, t):
         lista_tmp = []
     return lista
 
-
-
+def simulaHex(n,m,lista,t):
+    lista_tmp = []
+    
+    #caso onde numero de colunas é ímpar não permite unir as bordas, então somei uma borda
+    #imaginária, com todas as células mortas
+    if m%2 != 0:
+        m = m+1
+    
+    for i in range(t):
+        for j in range(n):
+            for k in range(m):
+                
+                vizinhos = 0
+                for l in range(j-1, j+2):
+                    for o in range(k-1, k+2):
+                        if (l!=j or o!=k) and (l%n,o%m) in lista:
+                            if m%2==0 and not(l == j+1 and o!=k):
+                                vizinhos = vizinhos+1
+                            elif m%2!=0 and not(l == j-1 and o!=k):
+                                vizinhos = vizinhos+1
+                       
+                if (j,k) in lista and vizinhos==2:
+                    lista_tmp.append((j,k))
+                elif not((j,k) in lista) and (vizinhos == 3 or vizinhos == 5):
+                    lista_tmp.append((j,k))
+        lista = lista_tmp
+        lista_tmp = []
+    return lista
 
 def main():
     grade, pares = leEntrada("arquivo.txt")
-    lista = simulaQuad(4,4,pares,3)
+    lista = simulaHex(4,4,pares,1)
     print(lista)
     
 main()
