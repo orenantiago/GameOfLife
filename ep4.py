@@ -1,3 +1,6 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
 def leEntrada(nome):
     f = open(nome, "r")
     grade = 0;
@@ -66,9 +69,18 @@ def simulaHex(n,m,lista,t):
         lista_tmp = []
     return lista
 
+def desenhaQuad(n,m, lista,figura):
+    coordenadas = np.zeros((n,m))
+    for i in range(len(lista)):
+        x,y = lista[i][0], lista[i][1]
+        coordenadas[x, y] = 1
+    plt.matshow(coordenadas, cmap =plt.cm.gray)
+    plt.show()
+
 def main():
-    grade, pares = leEntrada("arquivo.txt")
-    lista = simulaHex(4,4,pares,1)
+    grade, pares = leEntrada("20x20_glider.txt")
+    lista = simulaQuad(20,20,pares,2)
     print(lista)
+    desenhaQuad(20,20,lista, "abc")
     
 main()
