@@ -75,12 +75,12 @@ def desenhaQuad(n,m, lista,figura):
         x,y = lista[i][0], lista[i][1]
         coordenadas[x, y] = 1
     plt.matshow(coordenadas, cmap =plt.cm.gray)
-    plt.show()
+    plt.savefig(figura, format= 'png')
 
 def main():
     grade, pares = leEntrada("20x20_glider.txt")
     lista = simulaQuad(20,20,pares,2)
     print(lista)
-    desenhaQuad(20,20,lista, "abc")
+    desenhaQuad(20,20,lista, "figura")
     
 main()
