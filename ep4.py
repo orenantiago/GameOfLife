@@ -29,7 +29,7 @@ def simulaQuad(n,m,lista, t):
                 for l in range(j-1, j+2):
                     for o in range(k-1, k+2):
 
-                        if (l!=j or o!=k) and (l%n,o%m) in lista:
+                        if (l%n!=j or o%m!=k) and (l%n,o%m) in lista:
                             vizinhos = vizinhos+1
 
                 if (j,k) in lista and 2<=vizinhos<=3:
