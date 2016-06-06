@@ -47,8 +47,8 @@ def simulaHex(n,m,lista,t):
     
     #caso onde numero de colunas é ímpar não permite unir as bordas, então somei uma borda
     #imaginária, com todas as células mortas
-    if m%2 != 0:
-        m = m+1
+    if n%2 != 0:
+        n = n+1
     
     for i in range(t):
         for j in range(n):
@@ -124,7 +124,8 @@ def desenhaHex(n,m,lista, figura):
         )
     ax.add_collection(collection, autolim=True)
     ax.autoscale_view()
-    plt.savefig(figura, format= 'png')
+    #plt.savefig(figura, format= 'png')
+    plt.show()
     
 def simulaQuadGenerica(n,m,lista, t,b,s):
     lista_tmp = []
@@ -146,10 +147,40 @@ def simulaQuadGenerica(n,m,lista, t,b,s):
         lista = lista_tmp
         lista_tmp = []
     return lista
+
+def simulaHexGenerica(n,m,lista,t,b,s):
+    lista_tmp = []
+    
+    #caso onde numero de colunas é ímpar não permite unir as bordas, então somei uma borda
+    #imaginária, com todas as células mortas
+    if m%2 != 0:
+        m = m+1
+    
+    for i in range(t):
+        for j in range(n):
+            for k in range(m):
+                
+                vizinhos = 0
+                for l in range(j-1, j+2):
+                    for o in range(k-1, k+2):
+                        if (l%n!=j or o%m!=k) and (l%n,o%m) in lista:
+                            if m%2==0 and not(l == j+1 and o!=k):
+                                vizinhos = vizinhos+1
+                            elif m%2!=0 and not(l == j-1 and o!=k):
+                                vizinhos = vizinhos+1
+                       
+                if (j,k) in lista and vizinhos==s:
+                    lista_tmp.append((j,k))
+                elif not((j,k) in lista) and vizinhos == b:
+                    lista_tmp.append((j,k))
+        lista = lista_tmp
+        lista_tmp = []
+    return lista
+
 def main():
-    #grade, pares = leEntrada("arquivo.txt")
-    pares = [(0,0)]
-    lista = simulaQuadGenerica(4,4,pares,3,0,0)
-    desenhaQuad(4,4, lista, "figura")
+    grade, pares = leEntrada("arquivo.txt")
+    #pares = [(0,0)]
+    lista = simulaHexGenerica(4,4,pares,5,0,0)
+    desenhaHex(4,4, lista, "figura")
     print(lista)
 main()
