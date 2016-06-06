@@ -79,7 +79,8 @@ def desenhaQuad(n,m, lista, figura):
             x,y = lista[i][0], lista[i][1]
             coordenadas[x, y] = 1
     plt.matshow(coordenadas, cmap =plt.cm.gray)
-    plt.savefig(figura, format= 'png')
+    #plt.savefig(figura, format= 'png')
+    plt.show()
     
 #celulas vivas são brancas e as mortas são pretas
 def desenhaHex(n,m,lista, figura):
@@ -182,11 +183,26 @@ def simulaHexGenerica(n,m,lista,t,b,s):
         lista_tmp = []
     return lista
 
-def main():
+def haRepeticoes(n,m,lista,t):
+    lista_tmp = lista
+    listas = [lista_tmp]
+    repeticoes = False
 
+    i = 0
+    
+    while i < t and not repeticoes:
+        lista_tmp = simulaQuad(n,m,lista_tmp, 1)
+        repeticoes = lista_tmp in listas
+        listas.append(lista_tmp)
+        i = i+1
+    
+    return repeticoes
+
+
+def main():
+    t = int(input())
     grade, pares = leEntrada("arquivo.txt")
     #pares = [(0,0)]
-    lista = simulaHexGenerica(4,4,pares,5,0,0)
-    desenhaHex(4,4, lista, "figura")
-    print(lista)
+    repeticoes = haRepeticoes(4,4,pares,t)
+    print(repeticoes)
 main()
