@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import math
+from matplotlib.collections import RegularPolyCollection
 
 def leEntrada(nome):
     f = open(nome, "r")
@@ -55,7 +57,7 @@ def simulaHex(n,m,lista,t):
                 vizinhos = 0
                 for l in range(j-1, j+2):
                     for o in range(k-1, k+2):
-                        if (l!=j or o!=k) and (l%n,o%m) in lista:
+                        if (l%n!=j or o%m!=k) and (l%n,o%m) in lista:
                             if m%2==0 and not(l == j+1 and o!=k):
                                 vizinhos = vizinhos+1
                             elif m%2!=0 and not(l == j-1 and o!=k):
@@ -69,7 +71,7 @@ def simulaHex(n,m,lista,t):
         lista_tmp = []
     return lista
 
-def desenhaQuad(n,m, lista,figura):
+def desenhaQuad(n,m, lista, figura):
     coordenadas = np.zeros((n,m))
     for i in range(len(lista)):
         x,y = lista[i][0], lista[i][1]
@@ -77,10 +79,56 @@ def desenhaQuad(n,m, lista,figura):
     plt.matshow(coordenadas, cmap =plt.cm.gray)
     plt.savefig(figura, format= 'png')
 
-def main():
-    grade, pares = leEntrada("20x20_glider.txt")
-    lista = simulaQuad(20,20,pares,2)
-    print(lista)
-    desenhaQuad(20,20,lista, "figura")
+def desenhaHex(n,m,lista, figura):
+    offset = []
+    facecolors = []
     
+    #define tamanho do hexagono pelo circulo circunscrito
+    raio = 30
+    area = raio*np.pi**2
+    apot = (2*raio* math.sqrt(3))/9
+    #apot = (raio*(3**(1/2)))/(2)
+
+    for x in range(n):
+        for y in range(m):
+            if (x,y) in lista:
+                facecolors+= ['white',]
+            else:
+                facecolors+=['black',]
+            if x%2 == 0:
+                offset += [x*raio/2,(y*2*apot)+apot]
+            else:
+                offset += [x*raio/2,(y*2*apot)]
+
+    x_maximo = (n-1)*raio/2+ raio
+    x_minimo = -raio
+    y_maximo = (m-1)*2*apot + raio
+    y_minimo = -raio
+
+    fig = plt.figure(figsize=(10, 10), dpi=100)
+    ax = fig.add_subplot(111)
+    ax.axis([x_minimo,x_maximo , y_minimo, y_maximo])
+    
+    #gera hexagonos
+    collection = RegularPolyCollection(
+        numsides=6,
+        rotation=np.pi/6, 
+        sizes=(area,),
+        facecolors = facecolors,
+        edgecolors = ('blue',),
+        linewidths = (1,),
+        offsets = offset,
+        transOffset = ax.transData,
+        )
+    ax.add_collection(collection, autolim=True)
+    ax.autoscale_view()
+    plt.show()
+    #plt.savefig(figura, format= 'png')
+    
+
+def main():
+    grade, pares = leEntrada("arquivo.txt")
+    lista = simulaHex(10,10,pares,1)
+    desenhaHex(20,20, lista, "figura")
+    print(lista)
 main()
