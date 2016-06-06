@@ -71,14 +71,17 @@ def simulaHex(n,m,lista,t):
         lista_tmp = []
     return lista
 
+#celular vivas são brancas e as mortas são pretas
 def desenhaQuad(n,m, lista, figura):
     coordenadas = np.zeros((n,m))
-    for i in range(len(lista)):
-        x,y = lista[i][0], lista[i][1]
-        coordenadas[x, y] = 1
+    if lista != []:
+        for i in range(len(lista)):
+            x,y = lista[i][0], lista[i][1]
+            coordenadas[x, y] = 1
     plt.matshow(coordenadas, cmap =plt.cm.gray)
     plt.savefig(figura, format= 'png')
-
+    
+#celulas vivas são brancas e as mortas são pretas
 def desenhaHex(n,m,lista, figura):
     offset = []
     facecolors = []
@@ -87,7 +90,6 @@ def desenhaHex(n,m,lista, figura):
     raio = 30
     area = raio*np.pi**2
     apot = (2*raio* math.sqrt(3))/9
-    #apot = (raio*(3**(1/2)))/(2)
 
     for x in range(n):
         for y in range(m):
@@ -96,18 +98,18 @@ def desenhaHex(n,m,lista, figura):
             else:
                 facecolors+=['black',]
             if x%2 == 0:
-                offset += [x*raio/2,(y*2*apot)+apot]
+                offset += [x*1.5*raio,(y*2*apot)+apot]
             else:
-                offset += [x*raio/2,(y*2*apot)]
+                offset += [x*1.5*raio,(y*2*apot)]
 
-    x_maximo = (n-1)*raio/2+ raio
+    x_maximo = (n-1)*1.5*raio+ raio
     x_minimo = -raio
     y_maximo = (m-1)*2*apot + raio
     y_minimo = -raio
 
     fig = plt.figure(figsize=(10, 10), dpi=100)
     ax = fig.add_subplot(111)
-    ax.axis([x_minimo,x_maximo , y_minimo, y_maximo])
+    #ax.axis([x_minimo,x_maximo , y_minimo, y_maximo])
     
     #gera hexagonos
     collection = RegularPolyCollection(
@@ -122,13 +124,32 @@ def desenhaHex(n,m,lista, figura):
         )
     ax.add_collection(collection, autolim=True)
     ax.autoscale_view()
-    plt.show()
-    #plt.savefig(figura, format= 'png')
+    plt.savefig(figura, format= 'png')
     
+def simulaQuadGenerica(n,m,lista, t,b,s):
+    lista_tmp = []
+    for i in range(t):
+        for j in range(n):
+            for k in range(m):
+                
+                vizinhos = 0
+                for l in range(j-1, j+2):
+                    for o in range(k-1, k+2):
 
+                        if (l%n!=j or o%m!=k) and (l%n,o%m) in lista:
+                            vizinhos = vizinhos+1
+
+                if (j,k) in lista and vizinhos==s:
+                    lista_tmp.append((j,k))
+                elif vizinhos == b:
+                    lista_tmp.append((j,k))
+        lista = lista_tmp
+        lista_tmp = []
+    return lista
 def main():
-    grade, pares = leEntrada("arquivo.txt")
-    lista = simulaHex(10,10,pares,1)
-    desenhaHex(20,20, lista, "figura")
+    #grade, pares = leEntrada("arquivo.txt")
+    pares = [(0,0)]
+    lista = simulaQuadGenerica(4,4,pares,3,0,0)
+    desenhaQuad(4,4, lista, "figura")
     print(lista)
 main()
