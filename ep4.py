@@ -1,3 +1,6 @@
+#.n Renan Tiago dos Santos Silva
+#.u 9793606
+
 import matplotlib.pyplot as plt
 import numpy as np
 import math
@@ -71,7 +74,7 @@ def simulaHex(n,m,lista,t):
         lista_tmp = []
     return lista
 
-#celular vivas são brancas e as mortas são pretas
+#celulas vivas são brancas e as mortas são pretas
 def desenhaQuad(n,m, lista, figura):
     coordenadas = np.zeros((n,m))
     if lista != []:
@@ -79,18 +82,12 @@ def desenhaQuad(n,m, lista, figura):
             x,y = lista[i][0], lista[i][1]
             coordenadas[x, y] = 1
     plt.matshow(coordenadas, cmap =plt.cm.gray)
-    #plt.savefig(figura, format= 'png')
-    plt.show()
+    plt.savefig(figura, format= 'png')
     
 #celulas vivas são brancas e as mortas são pretas
 def desenhaHex(n,m,lista, figura):
     offset = []
     facecolors = []
-
-    #caso onde numero de colunas é ímpar não permite unir as bordas, então somei uma borda
-    #imaginária, com todas as células mortas
-    if n%2 != 0:
-        n = n+1
     
     #define tamanho do hexagono pelo circulo circunscrito
     raio = 30
@@ -115,7 +112,6 @@ def desenhaHex(n,m,lista, figura):
 
     fig = plt.figure(figsize=(10, 10), dpi=100)
     ax = fig.add_subplot(111)
-    #ax.axis([x_minimo,x_maximo , y_minimo, y_maximo])
     
     #gera hexagonos
     collection = RegularPolyCollection(
@@ -130,8 +126,7 @@ def desenhaHex(n,m,lista, figura):
         )
     ax.add_collection(collection, autolim=True)
     ax.autoscale_view()
-    #plt.savefig(figura, format= 'png')
-    plt.show()
+    plt.savefig(figura, format= 'png')
     
 def simulaQuadGenerica(n,m,lista, t,b,s):
     lista_tmp = []
@@ -197,12 +192,3 @@ def haRepeticoes(n,m,lista,t):
         i = i+1
     
     return repeticoes
-
-
-def main():
-    t = int(input())
-    grade, pares = leEntrada("arquivo.txt")
-    #pares = [(0,0)]
-    repeticoes = haRepeticoes(4,4,pares,t)
-    print(repeticoes)
-main()
