@@ -47,8 +47,8 @@ def simulaHex(n,m,lista,t):
     
     #caso onde numero de colunas é ímpar não permite unir as bordas, então somei uma borda
     #imaginária, com todas as células mortas
-    if m%2 != 0:
-        m = m+1
+    if n%2 != 0:
+        n = n+1
     
     for i in range(t):
         for j in range(n):
@@ -85,6 +85,11 @@ def desenhaQuad(n,m, lista, figura):
 def desenhaHex(n,m,lista, figura):
     offset = []
     facecolors = []
+
+    #caso onde numero de colunas é ímpar não permite unir as bordas, então somei uma borda
+    #imaginária, com todas as células mortas
+    if n%2 != 0:
+        n = n+1
     
     #define tamanho do hexagono pelo circulo circunscrito
     raio = 30
@@ -125,6 +130,7 @@ def desenhaHex(n,m,lista, figura):
     ax.add_collection(collection, autolim=True)
     ax.autoscale_view()
     plt.savefig(figura, format= 'png')
+    #plt.show()
     
 def simulaQuadGenerica(n,m,lista, t,b,s):
     lista_tmp = []
@@ -149,7 +155,7 @@ def simulaQuadGenerica(n,m,lista, t,b,s):
 def main():
     #grade, pares = leEntrada("arquivo.txt")
     pares = [(0,0)]
-    lista = simulaQuadGenerica(4,4,pares,3,0,0)
-    desenhaQuad(4,4, lista, "figura")
+    lista = simulaHex(3,4,pares,3)
+    desenhaHex(3,4, lista, "figura")
     print(lista)
 main()
