@@ -4,7 +4,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-from matplotlib.collections import RegularPolyCollection
+from matplotlib.patches import RegularPolygon
 
 def leEntrada(nome):
     f = open(nome, "r")
@@ -74,57 +74,59 @@ def simulaHex(n,m,lista,t):
         lista_tmp = []
     return lista
 
-#celulas vivas são brancas e as mortas são pretas
-def desenhaQuad(n,m, lista, figura):
-    coordenadas = np.zeros((n,m))
-    if lista != []:
-        for i in range(len(lista)):
-            x,y = lista[i][0], lista[i][1]
-            coordenadas[x, y] = 1
-    plt.matshow(coordenadas, cmap =plt.cm.gray)
+#celulas vivas são amarelas e as mortas são cinza
+def desenhaQuad(n,m, lista, figura): 
+
+    #define o tamanho do quadrado pelo circulo circunscrito   
+    raio = 5
+    apot = math.sqrt(2)*raio/2
+
+    fig = plt.figure(figsize=(10, 10), dpi=100)
+    ax = fig.add_subplot(111, aspect='equal', xlim = (0,2*apot*n), ylim = (0,2*apot*m))
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
+    plt.title("Conway's Game of Life")
+
+    for x in range(n):
+        for y in range(m):
+            patch = (apot + 2*apot*x, apot + 2*apot*y)
+            if (x,y) in lista:
+                quadrado = RegularPolygon(patch,4,raio,orientation = np.pi/4, facecolor = "yellow")
+                ax.add_patch(quadrado)
+            else:
+                quadrado = RegularPolygon(patch,4,raio,orientation = np.pi/4, facecolor = "gray")
+                ax.add_patch(quadrado)
+
+    ax.autoscale_view()
     plt.savefig(figura, format= 'png')
     
 #celulas vivas são brancas e as mortas são pretas
 def desenhaHex(n,m,lista, figura):
-    offset = []
-    facecolors = []
     
     #define tamanho do hexagono pelo circulo circunscrito
-    raio = 30
-    area = raio*np.pi**2
-    apot = (2*raio* math.sqrt(3))/9
+    raio = 5
+    apot = (raio* math.sqrt(3))/2
+
+    fig = plt.figure(figsize=(10, 10), dpi=100)
+    ax = fig.add_subplot(111, aspect='equal', xlim = (0,2*raio + 1.5*raio*(n-1)), ylim = (0,3*apot + 2*apot*(m-1)))
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
+    plt.title("Conway's Game of Life")
 
     for x in range(n):
         for y in range(m):
+            if x%2==0:
+                patch = (raio +1.5*x*raio,2*apot + 2*apot*y)
+            else:
+                patch = (raio +1.5*x*raio,apot + 2*apot*y)
+
             if (x,y) in lista:
-                facecolors+= ['white',]
-            else:
-                facecolors+=['black',]
-            if x%2 == 0:
-                offset += [x*1.5*raio,(y*2*apot)+apot]
-            else:
-                offset += [x*1.5*raio,(y*2*apot)]
 
-    x_maximo = (n-1)*1.5*raio+ raio
-    x_minimo = -raio
-    y_maximo = (m-1)*2*apot + raio
-    y_minimo = -raio
-
-    fig = plt.figure(figsize=(10, 10), dpi=100)
-    ax = fig.add_subplot(111)
-    
-    #gera hexagonos
-    collection = RegularPolyCollection(
-        numsides=6,
-        rotation=np.pi/6, 
-        sizes=(area,),
-        facecolors = facecolors,
-        edgecolors = ('blue',),
-        linewidths = (1,),
-        offsets = offset,
-        transOffset = ax.transData,
-        )
-    ax.add_collection(collection, autolim=True)
+                hexagono = RegularPolygon(patch,6,raio,orientation = np.pi/6, facecolor = "yellow")
+                ax.add_patch(hexagono)
+            else:
+                hexagono = RegularPolygon(patch,6,raio,orientation = np.pi/6, facecolor = "grey")
+                ax.add_patch(hexagono)
     ax.autoscale_view()
     plt.savefig(figura, format= 'png')
     
